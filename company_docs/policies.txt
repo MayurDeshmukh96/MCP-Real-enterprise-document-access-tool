@@ -1,0 +1,23 @@
+# SECURE ENTERPRISE MCP - COMPANY POLICIES
+
+## 1. DATA PRIVACY & SECURITY POLICY
+Employees must adhere to strict data protection standards. All customer data must be encrypted at rest and in transit. Access to production databases is restricted to authorized personnel only. Sharing of sensitive credentials or private keys in plain text (e.g., via Slack or email) is strictly prohibited.
+
+## 2. CODE QUALITY & REVIEW STANDARDS
+All code must undergo a peer review process before being merged into the main branch. Developers are required to write unit tests for every new feature. Code should follow the established company style guide (PEP 8 for Python, ESLint for JavaScript).
+
+## 3. INTELLECTUAL PROPERTY POLICY
+All software, designs, and documentation developed during the course of employment are the exclusive property of Secure Enterprise MCP. Employees are prohibited from using proprietary company code in personal projects or sharing it with third parties.
+
+## 4. REMOTE WORK & SECURITY
+Employees working remotely must use the company-approved VPN for accessing internal resources. Company hardware should not be used by non-employees. Lost or stolen devices must be reported to the IT Security team within 4 hours.
+
+## 5. USE OF AI TOOLS
+The use of generative AI tools (e.g., GitHub Copilot, ChatGPT) is permitted for productivity, provided that no proprietary company secrets or customer-identifiable information (PII) are inputted into external prompts. All AI-generated code must be manually verified for security vulnerabilities.
+
+## 6. PROFESSIONAL CONDUCT
+We maintain a zero-tolerance policy for harassment, discrimination, or any form of unprofessional behavior. We strive to create an inclusive environment where diversity of thought and background is celebrated.
+
+---
+*Last Updated: 2024-05-20*
+*Secure Enterprise MCP - Operations Department*
