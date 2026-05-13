@@ -3,3 +3,9 @@ psycopg2-binary
 sqlalchemy
 pydantic
 python-dotenv
+langchain 
+langgraph 
+langchain-mcp-adapters
+google-generativeai
+langchain-openai
+langchain-google-genai

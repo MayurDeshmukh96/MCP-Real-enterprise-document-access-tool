@@ -48,13 +48,13 @@ async def list_tools():
 
         Tool(
             name='read_file',
-            description='Read approved internal files',
+            description='Read approved internal company files from the company_docs directory',
             inputSchema={
                 'type':'object',
                 'properties':{
                     'path':{
                         'type':'string',
-                        'description':'Path to approved file'
+                        'description':'Filename only (e.g. "policies.txt"), relative to the company_docs folder. Do NOT include "company_docs/" in the path.'
                     },
                     'api_key':{
                         'type':'string',
