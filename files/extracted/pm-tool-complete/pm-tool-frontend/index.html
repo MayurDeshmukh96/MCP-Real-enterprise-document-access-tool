@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PM Tool - Task Management</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 28px;
+        }
+
+        .header p {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+        }
+
+        .card h2 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 20px;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+            font-family: inherit;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        button {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            flex: 1;
+        }
+
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-success {
+            background: #48bb78;
+            color: white;
+            padding: 8px 16px;
+            flex: none;
+        }
+
+        .btn-success:hover {
+            background: #38a169;
+        }
+
+        .btn-danger {
+            background: #f56565;
+            color: white;
+            padding: 8px 16px;
+            flex: none;
+        }
+
+        .btn-danger:hover {
+            background: #e53e3e;
+        }
+
+        .tasks-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .task-card {
+            background: #f8f9fa;
+            border-left: 4px solid #667eea;
+            padding: 20px;
+            border-radius: 6px;
+            transition: all 0.3s;
+        }
+
+        .task-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .task-card.completed {
+            border-left-color: #48bb78;
+            background: #f0fdf4;
+        }
+
+        .task-card.in-progress {
+            border-left-color: #ed8936;
+            background: #fffaf0;
+        }
+
+        .task-id {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .task-card.completed .task-id {
+            background: #48bb78;
+        }
+
+        .task-card.in-progress .task-id {
+            background: #ed8936;
+        }
+
+        .task-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 8px;
+        }
+
+        .task-description {
+            font-size: 13px;
+            color: #666;
+            margin-bottom: 12px;
+            line-height: 1.4;
+        }
+
+        .task-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            font-size: 12px;
+        }
+
+        .task-status {
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-weight: 600;
+        }
+
+        .task-status.pending {
+            background: #fee;
+            color: #c33;
+        }
+
+        .task-status.in-progress {
+            background: #fef3c7;
+            color: #d97706;
+        }
+
+        .task-status.completed {
+            background: #dcfce7;
+            color: #16a34a;
+        }
+
+        .task-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 12px;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .stat-box {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .stat-box h3 {
+            font-size: 14px;
+            margin-bottom: 10px;
+            opacity: 0.9;
+        }
+
+        .stat-box .number {
+            font-size: 32px;
+            font-weight: 700;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #999;
+        }
+
+        .empty-state svg {
+            width: 64px;
+            height: 64px;
+            margin-bottom: 20px;
+            opacity: 0.5;
+        }
+
+        .filter-buttons {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .filter-btn {
+            padding: 8px 16px;
+            border: 2px solid #ddd;
+            background: white;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 600;
+            transition: all 0.3s;
+            color: #666;
+        }
+
+        .filter-btn.active {
+            border-color: #667eea;
+            background: #667eea;
+            color: white;
+        }
+
+        .filter-btn:hover {
+            border-color: #667eea;
+            color: #667eea;
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: white;
+            padding: 16px 24px;
+            border-radius: 8px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            animation: slideIn 0.3s ease;
+            z-index: 1000;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        .toast.success {
+            border-left: 4px solid #48bb78;
+            color: #22543d;
+        }
+
+        .toast.error {
+            border-left: 4px solid #f56565;
+            color: #742a2a;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📋 PM Tool - Task Management</h1>
+            <p>Simple task management system integrated with MCP</p>
+        </div>
+
+        <div class="main-content">
+            <!-- Add Task Form -->
+            <div class="card">
+                <h2>➕ Add New Task</h2>
+                <form id="addTaskForm">
+                    <div class="form-group">
+                        <label for="taskTitle">Task Title *</label>
+                        <input 
+                            type="text" 
+                            id="taskTitle" 
+                            placeholder="e.g., Build User Authentication API"
+                            required
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label for="taskDescription">Description *</label>
+                        <textarea 
+                            id="taskDescription" 
+                            placeholder="Describe what needs to be done..."
+                            required
+                        ></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="taskRequirements">Requirements *</label>
+                        <textarea 
+                            id="taskRequirements" 
+                            placeholder="e.g., FastAPI, JWT, PostgreSQL..."
+                            required
+                        ></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="taskType">Task Type *</label>
+                        <select id="taskType" required>
+                            <option value="">-- Select Type --</option>
+                            <option value="FRONTEND">Frontend</option>
+                            <option value="BACKEND">Backend</option>
+                            <option value="DEVOPS">DevOps</option>
+                            <option value="DESIGN">Design</option>
+                            <option value="TESTING">Testing</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="taskBranch">Branch Name (optional)</label>
+                        <input 
+                            type="text" 
+                            id="taskBranch" 
+                            placeholder="e.g., feat/task-auth"
+                        >
+                    </div>
+
+                    <div class="button-group">
+                        <button type="submit" class="btn-primary">➕ Add Task</button>
+                    </div>
+                </form>
+
+                <div class="stats">
+                    <div class="stat-box">
+                        <h3>Total Tasks</h3>
+                        <div class="number" id="statTotal">0</div>
+                    </div>
+                    <div class="stat-box">
+                        <h3>Pending</h3>
+                        <div class="number" id="statPending">0</div>
+                    </div>
+                    <div class="stat-box">
+                        <h3>Completed</h3>
+                        <div class="number" id="statCompleted">0</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tasks List -->
+            <div class="card">
+                <h2>📋 Tasks</h2>
+                
+                <div class="filter-buttons">
+                    <button class="filter-btn active" data-filter="all">All</button>
+                    <button class="filter-btn" data-filter="pending">Pending</button>
+                    <button class="filter-btn" data-filter="in_progress">In Progress</button>
+                    <button class="filter-btn" data-filter="completed">Completed</button>
+                </div>
+
+                <div class="tasks-grid" id="tasksList">
+                    <div class="empty-state">
+                        <p>No tasks yet. Create one to get started! 🚀</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = 'http://localhost:3000/api';
+        let tasks = [];
+        let currentFilter = 'all';
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            loadTasks();
+            document.getElementById('addTaskForm').addEventListener('submit', handleAddTask);
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => filterTasks(e.target.dataset.filter));
+            });
+            // Refresh every 5 seconds
+            setInterval(loadTasks, 5000);
+        });
+
+        async function loadTasks() {
+            try {
+                const response = await fetch(`${API_URL}/tasks`);
+                tasks = await response.json();
+                renderTasks();
+                updateStats();
+            } catch (error) {
+                console.error('Error loading tasks:', error);
+                showToast('Failed to load tasks', 'error');
+            }
+        }
+
+        async function handleAddTask(e) {
+            e.preventDefault();
+
+            const task = {
+                title: document.getElementById('taskTitle').value,
+                description: document.getElementById('taskDescription').value,
+                requirements: document.getElementById('taskRequirements').value,
+                type: document.getElementById('taskType').value,
+                branch: document.getElementById('taskBranch').value || 'main'
+            };
+
+            try {
+                const response = await fetch(`${API_URL}/tasks`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(task)
+                });
+
+                if (response.ok) {
+                    showToast('✅ Task created successfully!', 'success');
+                    document.getElementById('addTaskForm').reset();
+                    loadTasks();
+                } else {
+                    showToast('Failed to create task', 'error');
+                }
+            } catch (error) {
+                console.error('Error creating task:', error);
+                showToast('Error creating task', 'error');
+            }
+        }
+
+        function renderTasks() {
+            const tasksList = document.getElementById('tasksList');
+            let filteredTasks = tasks;
+
+            if (currentFilter !== 'all') {
+                filteredTasks = tasks.filter(t => t.status === currentFilter);
+            }
+
+            if (filteredTasks.length === 0) {
+                tasksList.innerHTML = '<div class="empty-state"><p>No tasks found 📭</p></div>';
+                return;
+            }
+
+            tasksList.innerHTML = filteredTasks.map(task => `
+                <div class="task-card ${task.status}">
+                    <div class="task-id">ID: ${task.id}</div>
+                    <div class="task-title">${task.title}</div>
+                    <div class="task-description">${task.description}</div>
+                    <div class="task-meta">
+                        <span>Type: <strong>${task.type}</strong></span>
+                        <span class="task-status ${task.status}">${task.status.replace('_', ' ').toUpperCase()}</span>
+                    </div>
+                    <div class="task-meta">
+                        <span>Branch: <code>${task.branch}</code></span>
+                    </div>
+                    <div class="task-actions">
+                        ${task.status === 'pending' ? `
+                            <button class="btn-success" onclick="updateTaskStatus('${task.id}', 'in_progress')">
+                                ▶️ Start
+                            </button>
+                        ` : ''}
+                        ${task.status === 'in_progress' ? `
+                            <button class="btn-success" onclick="updateTaskStatus('${task.id}', 'completed')">
+                                ✅ Complete
+                            </button>
+                        ` : ''}
+                        <button class="btn-danger" onclick="deleteTask('${task.id}')">
+                            🗑️ Delete
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        async function updateTaskStatus(taskId, status) {
+            try {
+                const response = await fetch(`${API_URL}/tasks/${taskId}`, {
+                    method: 'PATCH',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ status })
+                });
+
+                if (response.ok) {
+                    showToast(`✅ Task marked as ${status.replace('_', ' ')}!`, 'success');
+                    loadTasks();
+                } else {
+                    showToast('Failed to update task', 'error');
+                }
+            } catch (error) {
+                console.error('Error updating task:', error);
+                showToast('Error updating task', 'error');
+            }
+        }
+
+        async function deleteTask(taskId) {
+            if (confirm('Are you sure you want to delete this task?')) {
+                try {
+                    const response = await fetch(`${API_URL}/tasks/${taskId}`, {
+                        method: 'DELETE'
+                    });
+
+                    if (response.ok) {
+                        showToast('✅ Task deleted!', 'success');
+                        loadTasks();
+                    } else {
+                        showToast('Failed to delete task', 'error');
+                    }
+                } catch (error) {
+                    console.error('Error deleting task:', error);
+                    showToast('Error deleting task', 'error');
+                }
+            }
+        }
+
+        function filterTasks(filter) {
+            currentFilter = filter;
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            renderTasks();
+        }
+
+        function updateStats() {
+            const total = tasks.length;
+            const pending = tasks.filter(t => t.status === 'pending').length;
+            const completed = tasks.filter(t => t.status === 'completed').length;
+
+            document.getElementById('statTotal').textContent = total;
+            document.getElementById('statPending').textContent = pending;
+            document.getElementById('statCompleted').textContent = completed;
+        }
+
+        function showToast(message, type = 'success') {
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            toast.textContent = message;
+            document.body.appendChild(toast);
+
+            setTimeout(() => {
+                toast.remove();
+            }, 3000);
+        }
+    </script>
+</body>
+</html>

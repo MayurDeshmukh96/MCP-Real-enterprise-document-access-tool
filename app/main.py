@@ -199,12 +199,9 @@ async def read_resource(uri:str): # AI sends resource identifier. Ex - file://po
 async def call_tool(name:str, arguments:dict):
 
 
-
     api_key = arguments.get('api_key')    # Read API key from incoming request.
     if api_key != MCP_API_KEY:      # Compare provided key with server key.
         raise ValueError("Unauthorized: Invalid API key")
-
-
 
 
     if name == 'query_database':
